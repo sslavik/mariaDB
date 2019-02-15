@@ -8,5 +8,6 @@ select j.id, j.nombre, j.apellido, j.salario,
 (select salario - SalarioMedio) as DiferenciaSalarial 
 from jugador j;
 
--- 
+-- Salario maximo de la suma de cada equipo
 select max(suma) from (select equipo, sum(salario) as suma from jugador group by equipo) as TablaNueva;
+

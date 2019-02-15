@@ -1,0 +1,104 @@
+-- MySQL dump 10.15  Distrib 10.0.27-MariaDB, for debian-linux-gnu (x86_64)
+--
+-- Host: localhost    Database: formacion
+-- ------------------------------------------------------
+-- Server version	10.0.27-MariaDB-0ubuntu0.16.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `curso`
+--
+
+DROP TABLE IF EXISTS `curso`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `curso` (
+  `curso` char(3) NOT NULL,
+  `nombreCurso` varchar(255) NOT NULL,
+  PRIMARY KEY (`curso`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `curso`
+--
+
+LOCK TABLES `curso` WRITE;
+/*!40000 ALTER TABLE `curso` DISABLE KEYS */;
+INSERT INTO `curso` VALUES ('001','MySQL'),('002','Java'),('003','CSharp'),('004','HTML5'),('005','Unity');
+/*!40000 ALTER TABLE `curso` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `empleado`
+--
+
+DROP TABLE IF EXISTS `empleado`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `empleado` (
+  `empleado` char(3) NOT NULL,
+  `nombre` varchar(255) NOT NULL,
+  `sueldo` decimal(10,2) DEFAULT NULL,
+  PRIMARY KEY (`empleado`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `empleado`
+--
+
+LOCK TABLES `empleado` WRITE;
+/*!40000 ALTER TABLE `empleado` DISABLE KEYS */;
+INSERT INTO `empleado` VALUES ('EMA','EMA',3500.00),('GRN','GRN',3500.00),('JBD','JBD',1800.00),('LRM','LRM',3490.00),('SMG','SMG',3490.00);
+/*!40000 ALTER TABLE `empleado` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `inscrito`
+--
+
+DROP TABLE IF EXISTS `inscrito`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `inscrito` (
+  `empleado` char(3) NOT NULL DEFAULT '',
+  `curso` char(3) NOT NULL DEFAULT '',
+  `horas` smallint(6) DEFAULT NULL,
+  PRIMARY KEY (`empleado`,`curso`),
+  KEY `curso` (`curso`),
+  CONSTRAINT `inscrito_ibfk_1` FOREIGN KEY (`empleado`) REFERENCES `empleado` (`empleado`) ON UPDATE CASCADE,
+  CONSTRAINT `inscrito_ibfk_2` FOREIGN KEY (`curso`) REFERENCES `curso` (`curso`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `inscrito`
+--
+
+LOCK TABLES `inscrito` WRITE;
+/*!40000 ALTER TABLE `inscrito` DISABLE KEYS */;
+INSERT INTO `inscrito` VALUES ('EMA','001',200),('EMA','002',50),('EMA','003',50),('EMA','004',50),('EMA','005',50),('GRN','001',50),('GRN','004',200),('GRN','005',50),('LRM','002',200),('LRM','004',200),('LRM','005',50),('SMG','001',200),('SMG','004',200),('SMG','005',50);
+/*!40000 ALTER TABLE `inscrito` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2017-02-17 12:30:13
