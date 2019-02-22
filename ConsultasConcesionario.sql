@@ -129,6 +129,11 @@ select * from ventas v where not exists (
     )    
 );
 -- 56.CIFC de concesionarios que han vendido el mismo coche a todos los clientes.
+select * from ventas v where not exists (
+    select * from ventas v1 where v1.cifc = v.cifc and not exists (
+        select * from ventas v2 where v1.cifc = v2.cifc and v.dni = v2.dni
+    )
+)
 -- 57. ¿Qué significa la siguiente consulta en SQL?
 -- Select distinct dni from ventas v1
 -- where not exists
