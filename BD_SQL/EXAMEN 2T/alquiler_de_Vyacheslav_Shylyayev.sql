@@ -14,7 +14,7 @@ select a.dniA from alquila a join casa c on (c.id = a.idCasa) where precio = (se
 select idCasa, truncate(avg(dias),1) as mediaDiasAlquilada from alquila where idCasa in (select idCasa from alquila group by idCasa having(avg(dias) > 2));
 -- 2 E
 select dni from inquilino i where not exists( 
-	select * from alquila a where  not exists (select * from casa c where c.id = a.idCasa and i.dni = a.dniA)
+	select * from alquila a where  not exists (select * from alquila c where c.idCasa = a.idCasa and i.dni = c.dniA)
 );
 -- 2 F
 select dni from inquilino i where not exists( 
