@@ -50,7 +50,9 @@ select * from coches where nombre not like '%A';
 -- 26.Hallar la media del número de coches que tienen todos los concesionarios.
 select c.nombre, avg(d.cantidad) from concesionario c join distribucion d where d.cifc = c.cifc; 
 -- 27.DNI más alto de todos los clientes de MADRID.
+select dni from clientes where dni = (select max(dni) from clientes where ciudad = 'MADRID');
 -- 28.DNI más bajo de todos los clientes que han comprado un coche blanco.
+select dni from clientes where dni = (select min(dni) from ventas where color = 'BLANCO');
 -- 29.Codigo de concesionarios cuyo stock de coches no sea nulo.
 -- 30.Cifm y nombre de marcas de coches cuya segunda letra del nombre de la ciudad
 select cifm, nombre, ciudad from marcas where ciudad rlike '^.i.*';
@@ -70,11 +72,13 @@ where exists (select * from distribucion d where v.cifc = d.cifc and c.modelo = 
 -- 38.Nombre y apellido de clientes que han comprado un coche a un concesionario de
 -- MADRID que posea actualmente stock de modelos GTI.
 -- 39.Nombre y apellido de clientes con dni menor que el del cliente JUAN MARTIN.
+select nombre, apellido from clientes where dni < (select dni from clientes where nombre = 'JUAN' and apellido = 'MARTIN');
 -- 40.Nombre y apellido de clientes con dni menor que el de todos los clientes de
 -- BARCELONA.
+select nombre, apellido from clientes where dni < all (select dni from clientes where ciudad = 'BARCELONA');
 -- 41.Nombre y apellido de clientes cuyo nombre empiece por 'A' y su dni sea mayor que
 -- el de todos los clientes de MADRID.
-select nombre, apellido from clientes where nombre rlike '^a' and dni > (
+select nombre, apellido from clientes where nombre rlike '^a' and dni > all (
     select max(dni) from clientes where ciudad = 'madrid'
 );
 -- 42.Nombre y apellido de clientes cuyo nombre empiece por 'A' y su dni sea mayor que
@@ -89,6 +93,7 @@ select nombre, apellido from clientes where nombre rlike '^a' and dni > (
 select * from clientes c where exists (select * from ventas v where v.dni = c.dni and v.color = "BLANCO") and exists(select * from ventas v where v.dni = c.dni and  v.color = "ROJO");
 -- 45.DNI de clientes cuya ciudad sea la última del alfabeto de las ciudades donde
 -- existan concesionarios.
+select * from clientes where ciudad = (select ciudad from clientes order by ciudad desc limit 1);
 -- 46.Sacar la media de los coches que tiene actualmente cada concesionario en stock.
 -- 47.Cifc de concesionarios que no sean de MADRID y su media de vehículos en stock
 -- sea la mayor de todas las medias.
@@ -122,11 +127,16 @@ select distinct(codcoche) from ventas v where not exists(
 );
 -- 54.Código de coches de color rojo y modelo GTI que han comprado todos los clientes
 -- cuyo apellido empieza por 'G'.
+select * from coches c where not exists (
+    select * from ventas v where not exists (
+        select * from clientes cl where cl.dni = v.dni and v.codcoche = c.codcoche and c.modelo = 'GTI' and v.color = 'ROJO' and cl.apellido like 'G'
+    ) 
+);
 -- 55.DNI de clientes que han comprado al menos los mismos coches que LUIS GARCIA.
-select * from ventas v where not exists (
-    select * from ventas v2 where v2.dni = (select * from ) and not exists(
-        select * from ventas v3 where v2.dni = cl.dni and v.codcoche = v2.codcoche
-    )    
+select dni, nombre, apellido from clientes cl where not exists (
+    select * from ventas v where v.dni = (select dni from clientes where nombre = 'LUIS' and apellido = 'GARCIA') and  not exists(
+        select * from ventas v2 where v2.codcoche = v.codcoche and cl.dni = v2.dni and v2.dni != v.dni
+        )
 );
 -- 56.CIFC de concesionarios que han vendido el mismo coche a todos los clientes.
 select * from ventas v where not exists (
