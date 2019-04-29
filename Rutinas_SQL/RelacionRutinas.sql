@@ -41,13 +41,13 @@ begin
     end if; 
 end//
 
-create function if not exists esPalindromo (cadena char(255)) returns char(255)
+create function if not exists esPalindromo (cadena varchar(255)) returns tinyint(1)
 deterministic
 sql security definer
 comment 'Devuelve 1 si es palindromo y 0 si no es palindromo'
 begin
     declare i int default 0;
-    declare reverso char(255) default '';
+    declare reverso varchar(255) default '';
 
     set i = length(cadena);
 
@@ -55,7 +55,7 @@ begin
        set reverso = concat(reverso,substring(cadena, i, 1));
        set i = i - 1; 
     end while;
-    return reverso;
+
     if( reverso rlike cadena ) then
         return 1;
     else
