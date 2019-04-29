@@ -13,6 +13,7 @@ _____________________
 delimiter //
 
 drop trigger if exists bd_habitante//
+drop trigger if exists bu_habitante//
 drop trigger if exists bd_propietario//
 drop trigger if exists bi_propietario//
 drop trigger if exists bu_propietario//
@@ -23,6 +24,15 @@ BEGIN
     if (select count(*) from habitante where empadronado = old.empadronado) = 1 THEN
         signal sqlstate '45000' set mysql_errno = 5000,  message_text = "Un municipio no se puede quedar sin habitantes";
     END IF;
+END//
+
+create trigger if not exists bu_habitante before update on habitante
+for each row 
+BEGIN
+    if (select count(*) from habitante where empadronado = old.empadronado) = 1 
+    and (old.empadronado <> new.empadronado) THEN
+        signal sqlstate '45000' set mysql_errno = 5000,  message_text =  "Un municipio no se puede quedar sin habitantes";
+    end if;
 END//
 
 create trigger if not exists bd_propietario before delete on propietario
@@ -36,7 +46,7 @@ END//
 create trigger if not exists bi_propietario before insert on propietario
 for each row 
 BEGIN
-    if(select count(*) from propietario where vivienda = new.vivienda) = 5 THEN
+    if(select count(*) from propietario where vivienda = new.vivienda) = 3 THEN
         signal sqlstate '45002' set mysql_errno = 5002, message_text = "No puede haber viviendas con MAS de 5 propietarios";
     end if;
     if(select empadronado from habitante where new.habitante = id) not rlike (select municipio from vivienda where nrc = new.vivienda) THEN
@@ -47,7 +57,8 @@ END//
 create trigger if not exists bu_propietario before insert on propietario
 for each row 
 BEGIN
-    if(select count(*) from propietario where vivienda = new.vivienda) = 5 THEN
+    if(select count(*) from propietario where vivienda = new.vivienda) = 3 
+    and (old.vivienda <> new.vivienda) THEN
         signal sqlstate '45002' set mysql_errno = 5002, message_text = "No puede haber viviendas con MAS de 5 propietarios";
     end if;
     if(select empadronado from habitante where new.habitante = id) not rlike (select municipio from vivienda where nrc = new.vivienda) THEN

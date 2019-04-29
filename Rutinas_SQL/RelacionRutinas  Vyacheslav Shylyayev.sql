@@ -63,6 +63,29 @@ begin
     end if;
 end//
 
+use liga//
+
+drop procedure if exists actualizarPuntos//
+
+create procedure if not exists actualizarPuntos(in equipo smallint(6), in puntosNuevos smallint(6))
+deterministic
+sql security definer
+comment 'Actualiza los puntos de un equipo pasandole los parametros (Equipo, Puntos)'
+begin
+    declare exit handler for 1264
+    begin
+        resignal set message_text = "No puede ser un número superior a los 6 dígitos";
+    end;
+
+    if(puntosNuevos < 0) then
+        signal sqlstate '45000' set mysql_errno = 5010, message_text = "No puede ser un número negativo";
+    else if  (select equipo in (select id from equipo)) = 0 then
+        signal sqlstate '45000' set mysql_errno = 5008, message_text = "No existe el equipo indicado";
+    end if;
+
+    update equipo set puntos = puntosNuevos where equipo = id;
+end//
+
+
 delimiter ;
 
-select esPalindromo("Hola aloh");
