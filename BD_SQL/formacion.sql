@@ -1,75 +1,88 @@
+drop database if exists formacion;
+
 create database if not exists formacion;
 
 use formacion;
 
 drop table if exists matricula;
 drop table if exists edicion;
-drop table if exists prerequisito;
+drop table if exists prerreq;
 drop table if exists capacitado;
 drop table if exists empleado;
 drop table if exists curso;
 
-create table if not exists curso(
-	codCurso char(10) primary key,
-	nombre char(30) unique,
-	duracion smallint not null
+create table curso (
+	codCurso char(15),
+	nombre varchar(25) unique not null,
+	duracion smallint not null,
+
+	primary key (codCurso)
+);
+create table empleado (
+	codEmp char(5),
+	nombre varchar(100) not null,
+	nif char(8) unique not null,
+	capacitado enum('S','N') not null,
+
+	primary key (codEmp)
 );
 
-create table if not exists empleado(
-	codEmp char(10) primary key,
-	nif char(10) unique,
-	capacitado enum ('S' , 'N') not null
+
+create table capacitado (
+	codEmp char(5),
+
+	primary key (codEmp),
+	foreign key (codEmp) references empleado (codEmp) on update cascade on delete cascade
 );
 
-create table if not exists capacitado(
-	capacitado char(10) primary key,
-
-	foreign key (capacitado) references empleado (codEmp) on delete cascade on update cascade 
-);
-
-create table if not exists prerequisito(
-	curso char(10),
-	cursoReq char(10),
+create table prerreq (
+	curso char(15),
+	cursoReq char(15),
 	obligatorio tinyint(1) not null,
 
-	primary key(curso, cursoReq),
-	foreign key (curso) references curso (codCurso) on delete restrict on update cascade,
-	foreign key (cursoReq) references curso (codCurso) on delete restrict on update cascade
+	primary key (curso, cursoReq),
+	foreign key (curso) references curso (codCurso) on update cascade,
+	foreign key (cursoReq) references curso (codCurso) on update cascade
 );
 
-create table if not exists edicion(
-	curso char(10),
+
+create table edicion (
+	codCurso char(15),
+	fecha date not null,
+	lugar char(10) not null,
+	horario enum('M','T','I') not null,
+	profesor char(5) not null,
+
+	primary key (fecha, codCurso),
+	foreign key (codCurso) references curso (codCurso) on delete cascade on update cascade,
+	foreign key (profesor) references capacitado (codEmp) on update cascade
+);
+
+create table matricula (
 	fecha date,
-	lugar varchar(30) not null,
-	horario enum ('m', 't', 'i') not null,
-	profesor char(10),
+	curso char(15),
+	empleado char(5),
 
-	primary key (curso, fecha),
-	foreign key (curso) references curso (codCurso) on delete cascade on update cascade,
-	foreign key (profesor) references capacitado (capacitado) on delete restrict on update cascade
-);
-create table if not exists matricula(
-	curso char(10),
-	fechaMat date,
-	empleado char(10),
-
-	primary key(curso, fechaMat, empleado),
-	foreign key (curso, fechaMat) references edicion (curso , fecha) on delete cascade on update cascade,
-	foreign key (empleado) references empleado (codEmp) on delete restrict on update cascade
+	primary key (fecha, curso, empleado),
+	foreign key (fecha, curso) references edicion (fecha, codCurso) on update cascade,
+	foreign key (empleado) references empleado (codEmp) on update cascade
 );
 
-insert empleado (codEmp, nif, capacitado) values ('001','aaa', 's'), ('002', 'bbb', 'n'), ('003', 'ccc', 's'), ('004', 'ddd', 's'), ('005', 'eee', 'n'), ('666', 'ElDiablo', 's');
 
-insert capacitado (capacitado) values ('001'), ('003'), ('004'), ('666');
+insert into empleado (codEmp, nombre, nif, capacitado) values ('001','emp 001','111F','N');
+insert into empleado (codEmp, nombre, nif, capacitado) values ('002','emp 002','222A','S');
+insert into empleado (codEmp, nombre, nif, capacitado) values ('003','emp 003','333N','S');
+insert into empleado (codEmp, nombre, nif, capacitado) values ('004','emp 004','444R','N');
 
-insert curso (codCurso, nombre, duracion) values ('linux', 'Linux Básico', 100),('linux2', 'Linux Avanzado', 100),('unity', 'Unity Básico', 500),('unityAdv', 'Unity Avanzado', 1000),('cSharp', '.NET', 2000);
+insert into capacitado (codEmp) values ('002'),('003');
 
-insert prerequisito (curso, cursoReq ,obligatorio) values ('linux2', 'linux', 1), ('unityAdv', 'unity', 1), ('cSharp' , 'linux', 0), ('unity', 'linux', 0);
+insert into curso (codCurso, nombre, duracion) values ('linux','Linux básico', 100);
+insert into curso (codCurso, nombre, duracion) values ('linux2','Linux Avanzado', 500);
+insert into curso (codCurso, nombre, duracion) values ('unity','Unity básico', 1000);
+insert into curso (codCurso, nombre, duracion) values ('unityAdv','Unity  Avanzado', 2000);
+insert into curso (codCurso, nombre, duracion) values ('CSharp','CSharp básico', 1000);
 
-insert edicion (curso, fecha, lugar, horario, profesor) values ('linux', '2012-01-20', 'Clase A', 'm', '001'),('linux2', '2013-01-20', 'Clase C', 'm', '001'), ('cSharp', '2015-03-01', 'Clase .NET', 'i', '666'), ('unity', '2014-02-25', 'Clase Unity', 't', '004'), ('unityAdv', '2015-09-15', 'Clase Unity', 'i', '004');
-
-insert matricula (curso, fechaMat, empleado) values ('linux', '2012-01-20', '002'),('linux', '2012-01-20', '005')
-,('linux2', '2013-01-20', '002'),('linux2', '2013-01-20', '005')
-,('unity', '2014-02-25', '002'),('unity', '2014-02-25', '005')
-,('unityAdv', '2015-09-15', '002'),('unityAdv', '2015-09-15', '005')
-,('cSharp', '2015-03-01', '002'),('cSharp', '2015-03-01', '005');
+insert into prerreq (curso, cursoReq, obligatorio) values ('linux2','linux',1);
+insert into prerreq (curso, cursoReq, obligatorio) values ('unityAdv','linux2',1);
+insert into prerreq (curso, cursoReq, obligatorio) values ('unityAdv','unity',0);
+insert into prerreq (curso, cursoReq, obligatorio) values ('CSharp','linux',0);	

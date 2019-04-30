@@ -1,0 +1,180 @@
+-- MySQL dump 10.16  Distrib 10.2.14-MariaDB, for debian-linux-gnu (x86_64)
+--
+-- Host: localhost    Database: cursos
+-- ------------------------------------------------------
+-- Server version	10.2.14-MariaDB-10.2.14+maria~xenial-log
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Current Database: `cursos`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `cursos` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+
+USE `cursos`;
+
+--
+-- Table structure for table `asistente`
+--
+
+DROP TABLE IF EXISTS `asistente`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `asistente` (
+  `empleado` smallint(5) unsigned NOT NULL,
+  `cursoEd` smallint(5) unsigned NOT NULL,
+  `fechaEd` date NOT NULL,
+  PRIMARY KEY (`empleado`,`cursoEd`,`fechaEd`),
+  KEY `cursoEd` (`cursoEd`,`fechaEd`),
+  CONSTRAINT `asistente_ibfk_1` FOREIGN KEY (`empleado`) REFERENCES `empleado` (`idEmpleado`) ON UPDATE CASCADE,
+  CONSTRAINT `asistente_ibfk_2` FOREIGN KEY (`cursoEd`, `fechaEd`) REFERENCES `edicion` (`curso`, `fecha`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `asistente`
+--
+
+LOCK TABLES `asistente` WRITE;
+/*!40000 ALTER TABLE `asistente` DISABLE KEYS */;
+/*!40000 ALTER TABLE `asistente` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `curso`
+--
+
+DROP TABLE IF EXISTS `curso`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `curso` (
+  `idCurso` smallint(5) unsigned NOT NULL,
+  `nombre` varchar(30) NOT NULL,
+  `coste` mediumint(8) unsigned NOT NULL,
+  `descripcion` varchar(50) NOT NULL,
+  `horas` smallint(5) unsigned NOT NULL,
+  PRIMARY KEY (`idCurso`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `curso`
+--
+
+LOCK TABLES `curso` WRITE;
+/*!40000 ALTER TABLE `curso` DISABLE KEYS */;
+INSERT INTO `curso` VALUES (1,'c1',16777215,'Desc1',100);
+/*!40000 ALTER TABLE `curso` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `edicion`
+--
+
+DROP TABLE IF EXISTS `edicion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `edicion` (
+  `curso` smallint(5) unsigned NOT NULL,
+  `fecha` date NOT NULL,
+  `horario` enum('M','T','I') NOT NULL,
+  `lugar` char(10) DEFAULT NULL,
+  `profesor` smallint(5) unsigned NOT NULL,
+  PRIMARY KEY (`curso`,`fecha`),
+  KEY `profesor` (`profesor`),
+  CONSTRAINT `edicion_ibfk_1` FOREIGN KEY (`curso`) REFERENCES `curso` (`idCurso`) ON UPDATE CASCADE,
+  CONSTRAINT `edicion_ibfk_2` FOREIGN KEY (`profesor`) REFERENCES `empleado` (`idEmpleado`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `edicion`
+--
+
+LOCK TABLES `edicion` WRITE;
+/*!40000 ALTER TABLE `edicion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `edicion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `empleado`
+--
+
+DROP TABLE IF EXISTS `empleado`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `empleado` (
+  `idEmpleado` smallint(5) unsigned NOT NULL,
+  `nombre` varchar(30) NOT NULL,
+  `direccion` varchar(50) NOT NULL,
+  `nif` char(15) NOT NULL,
+  `genero` enum('M','F') NOT NULL,
+  `tlf` char(15) NOT NULL,
+  `fNac` date NOT NULL,
+  `capacitado` tinyint(1) DEFAULT 0,
+  PRIMARY KEY (`idEmpleado`),
+  UNIQUE KEY `nif` (`nif`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `empleado`
+--
+
+LOCK TABLES `empleado` WRITE;
+/*!40000 ALTER TABLE `empleado` DISABLE KEYS */;
+INSERT INTO `empleado` VALUES (1,'e1','d1','n1','M','tlf1','2016-12-16',1),(2,'e2','d2','n2','F','tlf2','2016-12-16',2),(3,'e2','d2','n3','F','tlf2','2016-12-16',0);
+/*!40000 ALTER TABLE `empleado` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `requisito`
+--
+
+DROP TABLE IF EXISTS `requisito`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `requisito` (
+  `curso` smallint(5) unsigned NOT NULL,
+  `cursoReq` smallint(5) unsigned NOT NULL,
+  `obligatorio` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`curso`),
+  KEY `cursoReq` (`cursoReq`),
+  CONSTRAINT `requisito_ibfk_1` FOREIGN KEY (`curso`) REFERENCES `curso` (`idCurso`) ON UPDATE CASCADE,
+  CONSTRAINT `requisito_ibfk_2` FOREIGN KEY (`cursoReq`) REFERENCES `curso` (`idCurso`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `requisito`
+--
+
+LOCK TABLES `requisito` WRITE;
+/*!40000 ALTER TABLE `requisito` DISABLE KEYS */;
+/*!40000 ALTER TABLE `requisito` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping routines for database 'cursos'
+--
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2018-05-07 12:17:25
