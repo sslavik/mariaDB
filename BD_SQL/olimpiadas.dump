@@ -1,0 +1,463 @@
+-- MySQL dump 10.15  Distrib 10.0.38-MariaDB, for debian-linux-gnu (x86_64)
+--
+-- Host: localhost    Database: olimpiadas
+-- ------------------------------------------------------
+-- Server version	10.0.38-MariaDB-0ubuntu0.16.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `dorsal`
+--
+
+DROP TABLE IF EXISTS `dorsal`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dorsal` (
+  `nombrePrueba` varchar(50) NOT NULL DEFAULT '',
+  `codDorsal` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`nombrePrueba`,`codDorsal`),
+  CONSTRAINT `dorsal_ibfk_1` FOREIGN KEY (`nombrePrueba`) REFERENCES `prueba` (`nombrePrueba`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dorsal`
+--
+
+LOCK TABLES `dorsal` WRITE;
+/*!40000 ALTER TABLE `dorsal` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dorsal` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `dorsalEquipo`
+--
+
+DROP TABLE IF EXISTS `dorsalEquipo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dorsalEquipo` (
+  `nombrePrueba` varchar(50) NOT NULL DEFAULT '',
+  `codDorsal` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`nombrePrueba`,`codDorsal`),
+  CONSTRAINT `dorsalEquipo_ibfk_1` FOREIGN KEY (`nombrePrueba`, `codDorsal`) REFERENCES `dorsal` (`nombrePrueba`, `codDorsal`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dorsalEquipo`
+--
+
+LOCK TABLES `dorsalEquipo` WRITE;
+/*!40000 ALTER TABLE `dorsalEquipo` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dorsalEquipo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `dorsalEquipo_esquiadorEquipo`
+--
+
+DROP TABLE IF EXISTS `dorsalEquipo_esquiadorEquipo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dorsalEquipo_esquiadorEquipo` (
+  `nombrePrueba` varchar(50) NOT NULL DEFAULT '',
+  `codDorsal` int(10) unsigned NOT NULL DEFAULT '0',
+  `dni` char(9) NOT NULL DEFAULT '',
+  PRIMARY KEY (`nombrePrueba`,`codDorsal`,`dni`),
+  KEY `dni` (`dni`),
+  CONSTRAINT `dorsalEquipo_esquiadorEquipo_ibfk_1` FOREIGN KEY (`dni`) REFERENCES `esquiadorEquipo` (`dni`) ON UPDATE CASCADE,
+  CONSTRAINT `dorsalEquipo_esquiadorEquipo_ibfk_2` FOREIGN KEY (`nombrePrueba`, `codDorsal`) REFERENCES `dorsalEquipo` (`nombrePrueba`, `codDorsal`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dorsalEquipo_esquiadorEquipo`
+--
+
+LOCK TABLES `dorsalEquipo_esquiadorEquipo` WRITE;
+/*!40000 ALTER TABLE `dorsalEquipo_esquiadorEquipo` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dorsalEquipo_esquiadorEquipo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `dorsalIndividual`
+--
+
+DROP TABLE IF EXISTS `dorsalIndividual`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dorsalIndividual` (
+  `nombrePrueba` varchar(50) NOT NULL DEFAULT '',
+  `codDorsal` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`nombrePrueba`,`codDorsal`),
+  CONSTRAINT `dorsalIndividual_ibfk_1` FOREIGN KEY (`nombrePrueba`, `codDorsal`) REFERENCES `dorsal` (`nombrePrueba`, `codDorsal`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dorsalIndividual`
+--
+
+LOCK TABLES `dorsalIndividual` WRITE;
+/*!40000 ALTER TABLE `dorsalIndividual` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dorsalIndividual` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `equipo`
+--
+
+DROP TABLE IF EXISTS `equipo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `equipo` (
+  `nombre` varchar(50) NOT NULL,
+  `Nesquiadores` int(10) unsigned NOT NULL,
+  `entrenador` varchar(50) NOT NULL,
+  PRIMARY KEY (`nombre`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `equipo`
+--
+
+LOCK TABLES `equipo` WRITE;
+/*!40000 ALTER TABLE `equipo` DISABLE KEYS */;
+/*!40000 ALTER TABLE `equipo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `esquiador`
+--
+
+DROP TABLE IF EXISTS `esquiador`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `esquiador` (
+  `dni` char(9) NOT NULL,
+  `nombre` varchar(50) NOT NULL,
+  `Fnacimiento` date NOT NULL,
+  `edad` int(10) unsigned NOT NULL,
+  `federado` varchar(50) NOT NULL,
+  PRIMARY KEY (`dni`),
+  KEY `federado` (`federado`),
+  CONSTRAINT `esquiador_ibfk_1` FOREIGN KEY (`federado`) REFERENCES `federacion` (`nombre`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `esquiador`
+--
+
+LOCK TABLES `esquiador` WRITE;
+/*!40000 ALTER TABLE `esquiador` DISABLE KEYS */;
+/*!40000 ALTER TABLE `esquiador` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `esquiadorEquipo`
+--
+
+DROP TABLE IF EXISTS `esquiadorEquipo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `esquiadorEquipo` (
+  `dni` char(9) NOT NULL,
+  `equipo` varchar(50) NOT NULL,
+  PRIMARY KEY (`dni`),
+  KEY `equipo` (`equipo`),
+  CONSTRAINT `esquiadorEquipo_ibfk_1` FOREIGN KEY (`dni`) REFERENCES `esquiador` (`dni`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `esquiadorEquipo_ibfk_2` FOREIGN KEY (`equipo`) REFERENCES `equipo` (`nombre`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `esquiadorEquipo`
+--
+
+LOCK TABLES `esquiadorEquipo` WRITE;
+/*!40000 ALTER TABLE `esquiadorEquipo` DISABLE KEYS */;
+/*!40000 ALTER TABLE `esquiadorEquipo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `esquiadorIndividual`
+--
+
+DROP TABLE IF EXISTS `esquiadorIndividual`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `esquiadorIndividual` (
+  `dni` char(9) NOT NULL,
+  PRIMARY KEY (`dni`),
+  CONSTRAINT `esquiadorIndividual_ibfk_1` FOREIGN KEY (`dni`) REFERENCES `esquiador` (`dni`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `esquiadorIndividual`
+--
+
+LOCK TABLES `esquiadorIndividual` WRITE;
+/*!40000 ALTER TABLE `esquiadorIndividual` DISABLE KEYS */;
+/*!40000 ALTER TABLE `esquiadorIndividual` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `estacion`
+--
+
+DROP TABLE IF EXISTS `estacion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `estacion` (
+  `CodEstacion` int(10) unsigned NOT NULL,
+  `nombre` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`CodEstacion`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `estacion`
+--
+
+LOCK TABLES `estacion` WRITE;
+/*!40000 ALTER TABLE `estacion` DISABLE KEYS */;
+INSERT INTO `estacion` VALUES (1,'Sierra Nevada'),(2,'Baqueira Beret');
+/*!40000 ALTER TABLE `estacion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `estacion_federacion`
+--
+
+DROP TABLE IF EXISTS `estacion_federacion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `estacion_federacion` (
+  `nombreFederacion` varchar(50) NOT NULL DEFAULT '',
+  `estacion` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`nombreFederacion`,`estacion`),
+  KEY `estacion` (`estacion`),
+  CONSTRAINT `estacion_federacion_ibfk_1` FOREIGN KEY (`nombreFederacion`) REFERENCES `federacion` (`nombre`) ON UPDATE CASCADE,
+  CONSTRAINT `estacion_federacion_ibfk_2` FOREIGN KEY (`estacion`) REFERENCES `estacion` (`CodEstacion`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `estacion_federacion`
+--
+
+LOCK TABLES `estacion_federacion` WRITE;
+/*!40000 ALTER TABLE `estacion_federacion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `estacion_federacion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `federacion`
+--
+
+DROP TABLE IF EXISTS `federacion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `federacion` (
+  `nombre` varchar(50) NOT NULL,
+  `Nfederados` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`nombre`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `federacion`
+--
+
+LOCK TABLES `federacion` WRITE;
+/*!40000 ALTER TABLE `federacion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `federacion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `formacionPistas`
+--
+
+DROP TABLE IF EXISTS `formacionPistas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `formacionPistas` (
+  `codEstacionContenedora` int(10) unsigned NOT NULL DEFAULT '0',
+  `NpistaContenedora` varchar(50) NOT NULL DEFAULT '',
+  `codEstacionContenida` int(10) unsigned NOT NULL DEFAULT '0',
+  `NpistaContenida` varchar(50) NOT NULL DEFAULT '',
+  PRIMARY KEY (`codEstacionContenedora`,`NpistaContenedora`,`codEstacionContenida`,`NpistaContenida`),
+  KEY `codEstacionContenida` (`codEstacionContenida`,`NpistaContenida`),
+  CONSTRAINT `formacionPistas_ibfk_1` FOREIGN KEY (`codEstacionContenedora`, `NpistaContenedora`) REFERENCES `pista` (`codEstacion`, `Npista`) ON UPDATE CASCADE,
+  CONSTRAINT `formacionPistas_ibfk_2` FOREIGN KEY (`codEstacionContenida`, `NpistaContenida`) REFERENCES `pista` (`codEstacion`, `Npista`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `formacionPistas`
+--
+
+LOCK TABLES `formacionPistas` WRITE;
+/*!40000 ALTER TABLE `formacionPistas` DISABLE KEYS */;
+/*!40000 ALTER TABLE `formacionPistas` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `pista`
+--
+
+DROP TABLE IF EXISTS `pista`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pista` (
+  `codEstacion` int(10) unsigned NOT NULL DEFAULT '0',
+  `Npista` varchar(50) NOT NULL DEFAULT '',
+  `dificultad` enum('V','A','R','N','S') NOT NULL,
+  `longitud` decimal(10,0) unsigned NOT NULL,
+  PRIMARY KEY (`codEstacion`,`Npista`),
+  CONSTRAINT `pista_ibfk_1` FOREIGN KEY (`codEstacion`) REFERENCES `estacion` (`CodEstacion`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pista`
+--
+
+LOCK TABLES `pista` WRITE;
+/*!40000 ALTER TABLE `pista` DISABLE KEYS */;
+INSERT INTO `pista` VALUES (1,'Aguila','R',6329),(1,'Amapola','V',382),(1,'Ardilla','A',218),(1,'Fuente del Tesoro','N',942),(1,'Half Pipe','S',456),(1,'Lastron','R',588),(1,'Miniparque','S',431),(1,'Panoramica II','V',1005),(1,'Perdiz','V',1467),(1,'Rebeco','A',2327),(1,'Tobogan','R',786),(1,'Trampolin','N',390),(1,'Tubo del Enebro','N',493),(1,'Visera','N',436),(1,'Zaragatillo','V',271),(2,'Baqueira','R',1484),(2,'Egua 1','N',723),(2,'Egua 2','R',1617),(2,'Egua 3','R',1226),(2,'Lebre','R',870),(2,'Luis Arias','N',2080),(2,'Passarells','N',493),(2,'Pastors','V',565),(2,'Rabada','V',315),(2,'Stadium','R',934),(2,'Tortuga','A',839);
+/*!40000 ALTER TABLE `pista` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `prueba`
+--
+
+DROP TABLE IF EXISTS `prueba`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `prueba` (
+  `nombrePrueba` varchar(50) NOT NULL,
+  PRIMARY KEY (`nombrePrueba`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `prueba`
+--
+
+LOCK TABLES `prueba` WRITE;
+/*!40000 ALTER TABLE `prueba` DISABLE KEYS */;
+/*!40000 ALTER TABLE `prueba` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `prueba_pista`
+--
+
+DROP TABLE IF EXISTS `prueba_pista`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `prueba_pista` (
+  `nombrePrueba` varchar(50) NOT NULL DEFAULT '',
+  `codEstacion` int(10) unsigned NOT NULL DEFAULT '0',
+  `Npista` varchar(50) NOT NULL DEFAULT '',
+  `jornada` date NOT NULL DEFAULT '0000-00-00',
+  PRIMARY KEY (`nombrePrueba`,`codEstacion`,`Npista`,`jornada`),
+  KEY `codEstacion` (`codEstacion`,`Npista`),
+  CONSTRAINT `prueba_pista_ibfk_1` FOREIGN KEY (`nombrePrueba`) REFERENCES `prueba` (`nombrePrueba`) ON UPDATE CASCADE,
+  CONSTRAINT `prueba_pista_ibfk_2` FOREIGN KEY (`codEstacion`, `Npista`) REFERENCES `pista` (`codEstacion`, `Npista`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `prueba_pista`
+--
+
+LOCK TABLES `prueba_pista` WRITE;
+/*!40000 ALTER TABLE `prueba_pista` DISABLE KEYS */;
+/*!40000 ALTER TABLE `prueba_pista` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `puntosContacto`
+--
+
+DROP TABLE IF EXISTS `puntosContacto`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `puntosContacto` (
+  `codEstacion` int(10) unsigned NOT NULL DEFAULT '0',
+  `Pcontacto` varchar(40) NOT NULL DEFAULT '',
+  PRIMARY KEY (`codEstacion`,`Pcontacto`),
+  CONSTRAINT `puntosContacto_ibfk_1` FOREIGN KEY (`codEstacion`) REFERENCES `estacion` (`CodEstacion`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `puntosContacto`
+--
+
+LOCK TABLES `puntosContacto` WRITE;
+/*!40000 ALTER TABLE `puntosContacto` DISABLE KEYS */;
+/*!40000 ALTER TABLE `puntosContacto` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Temporary table structure for view `vestacion`
+--
+
+DROP TABLE IF EXISTS `vestacion`;
+/*!50001 DROP VIEW IF EXISTS `vestacion`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `vestacion` (
+  `codEstacion` tinyint NOT NULL,
+  `nombre` tinyint NOT NULL,
+  `kms` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Final view structure for view `vestacion`
+--
+
+/*!50001 DROP TABLE IF EXISTS `vestacion`*/;
+/*!50001 DROP VIEW IF EXISTS `vestacion`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `vestacion` AS select `e`.`CodEstacion` AS `codEstacion`,`e`.`nombre` AS `nombre`,(select sum(`p`.`longitud`) from `pista` `p` where (`p`.`codEstacion` = `e`.`CodEstacion`)) AS `kms` from `estacion` `e` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2019-05-10 11:19:56
