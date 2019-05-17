@@ -1,5 +1,5 @@
 #El comando:
-
+timedatectl set-local-rtc 0
 sudo mysqld_safe --tc-heuristic-recover=COMMIT 
 
 #EN CASO EXTREMO REINSTALE CON ESTOS COMANDOS:
